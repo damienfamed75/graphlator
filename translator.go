@@ -35,8 +35,12 @@ func NewTranslator(r ...Regulation) *Translator {
 
 func (t *Translator) TranslateQuery(f Function, r ...Regulation) []byte {
 	buf := t.buffers.Get().(*bytes.Buffer)
+	defer func() {
+		buf.Reset()
+		t.buffers.Put(buf)
+	}()
 
-	buf.WriteByte('{')
+	buf.WriteByte('{') // Beginning of Query
 
 	buf.WriteString(f.Name + "(func: ")
 	buf.WriteString(f.Parameter.Constraint.String() + "(")
@@ -47,12 +51,9 @@ func (t *Translator) TranslateQuery(f Function, r ...Regulation) []byte {
 	buf.WriteString(f.Result.Name)
 	buf.WriteByte('}')
 
-	buf.WriteByte('}')
+	buf.WriteByte('}') // End of Query
 
 	query := buf.Bytes()
-
-	buf.Reset()
-	t.buffers.Put(buf)
 
 	return query
 }

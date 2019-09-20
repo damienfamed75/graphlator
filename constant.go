@@ -7,7 +7,7 @@ const (
 	GraphQLPlus
 )
 
-// go:generate stringer -type=constraint -linecomment
+//go:generate stringer -type=constraint -linecomment
 type constraint int8
 
 // They have a prefix of constraint because "type" isn't a valid const name.
@@ -19,13 +19,45 @@ const (
 	constraintLessThan                             // lt
 	constraintAnyOfTerms                           // anyOfTerms
 	constraintAllOfTerms                           // allOfTerms
-	constraintType
+	constraintType                                 // type
 )
 
 func Equal(predicate string, value interface{}) *Parameter {
+	return buildParamater(constraintEqual, predicate, value)
+}
+
+func GreaterThanOrEqual(predicate string, value interface{}) *Parameter {
+	return buildParamater(constraintGreaterThanOrEqual, predicate, value)
+}
+
+func LessThanOrEqual(predicate string, value interface{}) *Parameter {
+	return buildParamater(constraintLessThanOrEqual, predicate, value)
+}
+
+func GreaterThan(predicate string, value interface{}) *Parameter {
+	return buildParamater(constraintGreaterThan, predicate, value)
+}
+
+func LessThan(predicate string, value interface{}) *Parameter {
+	return buildParamater(constraintLessThan, predicate, value)
+}
+
+func AnyOfTerms(predicate string, value interface{}) *Parameter {
+	return buildParamater(constraintAnyOfTerms, predicate, value)
+}
+
+func AllOfTerms(predicate string, value interface{}) *Parameter {
+	return buildParamater(constraintAllOfTerms, predicate, value)
+}
+
+func Type(typeAsString string) *Parameter {
+	return buildParamater(constraintType, typeAsString, nil)
+}
+
+func buildParamater(c constraint, p string, v interface{}) *Parameter {
 	return &Parameter{
-		Constraint: constraintEqual,
-		Predicate:  predicate,
-		Value:      value,
+		Constraint: c,
+		Predicate:  p,
+		Value:      v,
 	}
 }

@@ -15,7 +15,7 @@ func main() {
 		},
 	}
 
-	t := g.NewTranslator()
+	t := g.NewTranslator(g.WithLanguage(g.GraphQLPlus))
 
 	res := t.TranslateQuery(f)
 

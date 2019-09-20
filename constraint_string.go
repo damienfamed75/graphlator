@@ -18,9 +18,9 @@ func _() {
 	_ = x[constraintType-7]
 }
 
-const _constraint_name = "eqgelegtltanyOfTermsallOfTermsconstraintType"
+const _constraint_name = "eqgelegtltanyOfTermsallOfTermstype"
 
-var _constraint_index = [...]uint8{0, 2, 4, 6, 8, 10, 20, 30, 44}
+var _constraint_index = [...]uint8{0, 2, 4, 6, 8, 10, 20, 30, 34}
 
 func (i constraint) String() string {
 	if i < 0 || i >= constraint(len(_constraint_index)-1) {

@@ -43,9 +43,23 @@ func (t *Translator) TranslateQuery(f Function, r ...Regulation) []byte {
 	buf.WriteByte('{') // Beginning of Query
 
 	buf.WriteString(f.Name + "(func: ")
-	buf.WriteString(f.Parameter.Constraint.String() + "(")
-	buf.WriteString(f.Parameter.Predicate + ",")
+	buf.WriteString(f.Parameter.Operation.String() + "(")
+	buf.WriteString(f.Parameter.Predicate + ",") // TODO Change dynamic
 	buf.WriteString(fmt.Sprintf("%#v))", f.Parameter.Value))
+
+	if f.Filters != nil {
+		buf.WriteString("@filter(")
+		for _, p := range f.Filters.params {
+			buf.WriteString(p.Operation.String() + "(")
+			buf.WriteString(p.Predicate + ",") // TODO Change dynamic
+			buf.WriteString(fmt.Sprintf("%#v)", p.Value))
+
+			if f.Filters.constraint != -1 {
+				buf.WriteString(f.Filters.constraint.String())
+			}
+		}
+		buf.WriteByte(')')
+	}
 
 	buf.WriteByte('{')
 	buf.WriteString(f.Result.Name)

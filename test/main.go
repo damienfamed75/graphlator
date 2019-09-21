@@ -3,19 +3,35 @@ package main
 import (
 	"fmt"
 
-	g "github.com/damienfamed75/graphlator"
+	. "github.com/damienfamed75/graphlator"
 )
 
+// Types of Results
+//
+// name uid
+//
+// has { name }
+//
+// has @filter(type(Friend)) { name }
+//
+// expand(_all_)
+//
+// expand has {
+//
+// }
+
 func main() {
-	f := g.Function{
+	f := Function{
 		Name:      "me",
-		Parameter: g.Equal("name", "Damien"),
-		Result: &g.Result{
-			Name: "name",
+		Parameter: Equal("name", "Damien"),
+		Filters:   GreaterThan("age", 18).AsFilter(),
+		Result: &Result{
+			Name: "age",
 		},
+		// Get multiple results back.
 	}
 
-	t := g.NewTranslator(g.WithLanguage(g.GraphQLPlus))
+	t := NewTranslator(WithLanguage(GraphQLPlus))
 
 	res := t.TranslateQuery(f)
 

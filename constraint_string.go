@@ -8,19 +8,14 @@ func _() {
 	// An "invalid array index" compiler error signifies that the constant values have changed.
 	// Re-run the stringer command to generate them again.
 	var x [1]struct{}
-	_ = x[constraintEqual-0]
-	_ = x[constraintGreaterThanOrEqual-1]
-	_ = x[constraintLessThanOrEqual-2]
-	_ = x[constraintGreaterThan-3]
-	_ = x[constraintLessThan-4]
-	_ = x[constraintAnyOfTerms-5]
-	_ = x[constraintAllOfTerms-6]
-	_ = x[constraintType-7]
+	_ = x[and-0]
+	_ = x[or-1]
+	_ = x[not-2]
 }
 
-const _constraint_name = "eqgelegtltanyOfTermsallOfTermstype"
+const _constraint_name = "ANDORNOT"
 
-var _constraint_index = [...]uint8{0, 2, 4, 6, 8, 10, 20, 30, 34}
+var _constraint_index = [...]uint8{0, 3, 5, 8}
 
 func (i constraint) String() string {
 	if i < 0 || i >= constraint(len(_constraint_index)-1) {

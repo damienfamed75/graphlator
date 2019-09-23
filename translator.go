@@ -40,29 +40,16 @@ func (t *Translator) TranslateQuery(f Function, r ...Regulation) []byte {
 		t.buffers.Put(buf)
 	}()
 
-	buf.WriteByte('{') // Beginning of Query
+	buf.WriteString(fmt.Sprintf("{%s(func: %s(",
+		f.Name, f.Parameter.Operation))
 
-	buf.WriteString(f.Name + "(func: ")
-	buf.WriteString(f.Parameter.Operation.String() + "(")
-
-	// switch f.Parameter.Operation {
-	// case operationType:
-	// 	buf.WriteString("\"" + f.Parameter.Predicate + "\"") // TODO Change dynamic
-	// default:
-	// 	buf.WriteString(f.Parameter.Predicate) // TODO Change dynamic
-	// }
-
-	// if f.Parameter.Value != nil {
-	// 	buf.WriteString(fmt.Sprintf(",%#v", f.Parameter.Value))
-	// }
-	// buf.WriteString("))")
 	writeOperation(buf, f.Parameter)
 	buf.WriteString(") ")
 
 	if f.Filters != nil {
 		buf.WriteString("@filter(")
 		for i, p := range f.Filters.params {
-			if f.Filters.constraint != -1 && i != 0 {
+			if f.Filters.constraint != invalidConstraint && i != 0 {
 				buf.WriteString(" " + f.Filters.constraint.String() + " ")
 			}
 			buf.WriteString(p.Operation.String() + "(")

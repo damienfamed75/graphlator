@@ -44,19 +44,32 @@ func (t *Translator) TranslateQuery(f Function, r ...Regulation) []byte {
 
 	buf.WriteString(f.Name + "(func: ")
 	buf.WriteString(f.Parameter.Operation.String() + "(")
-	buf.WriteString(f.Parameter.Predicate + ",") // TODO Change dynamic
-	buf.WriteString(fmt.Sprintf("%#v))", f.Parameter.Value))
+
+	// switch f.Parameter.Operation {
+	// case operationType:
+	// 	buf.WriteString("\"" + f.Parameter.Predicate + "\"") // TODO Change dynamic
+	// default:
+	// 	buf.WriteString(f.Parameter.Predicate) // TODO Change dynamic
+	// }
+
+	// if f.Parameter.Value != nil {
+	// 	buf.WriteString(fmt.Sprintf(",%#v", f.Parameter.Value))
+	// }
+	// buf.WriteString("))")
+	writeOperation(buf, f.Parameter)
+	buf.WriteString(") ")
 
 	if f.Filters != nil {
 		buf.WriteString("@filter(")
-		for _, p := range f.Filters.params {
-			buf.WriteString(p.Operation.String() + "(")
-			buf.WriteString(p.Predicate + ",") // TODO Change dynamic
-			buf.WriteString(fmt.Sprintf("%#v)", p.Value))
-
-			if f.Filters.constraint != -1 {
-				buf.WriteString(f.Filters.constraint.String())
+		for i, p := range f.Filters.params {
+			if f.Filters.constraint != -1 && i != 0 {
+				buf.WriteString(" " + f.Filters.constraint.String() + " ")
 			}
+			buf.WriteString(p.Operation.String() + "(")
+			// buf.WriteString(p.Predicate + ",") // TODO Change dynamic
+			// buf.WriteString(fmt.Sprintf("%#v)", p.Value))
+			writeOperation(buf, p)
+
 		}
 		buf.WriteByte(')')
 	}
@@ -68,6 +81,20 @@ func (t *Translator) TranslateQuery(f Function, r ...Regulation) []byte {
 	query := buf.Bytes()
 
 	return query
+}
+
+func writeOperation(buf *bytes.Buffer, p Parameter) {
+	switch p.Operation {
+	case operationType:
+		buf.WriteString("\"" + p.Predicate + "\"")
+	default:
+		buf.WriteString(p.Predicate)
+	}
+
+	if p.Value != nil {
+		buf.WriteString(fmt.Sprintf(",%#v", p.Value))
+	}
+	buf.WriteByte(')')
 }
 
 func loopResults(buf *bytes.Buffer, r []Result) {

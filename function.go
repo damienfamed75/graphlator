@@ -15,7 +15,7 @@ func (p Parameter) AsFilter() *Filters {
 
 type Function struct {
 	Name      string
-	Parameter *Parameter
+	Parameter Parameter
 	Filters   *Filters
 	Results   []Result
 }

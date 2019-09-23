@@ -9,8 +9,8 @@ import (
 func main() {
 	f := Function{
 		Name:      "me",
-		Parameter: Equal("name", "Damien"),
-		Filters:   GreaterThan("age", 18).AsFilter(),
+		Parameter: Has("Friend"),
+		Filters:   And(GreaterThan("age", 18), Type("Friend")),
 		Results: ResultSlice(
 			NewResult("name"), NewResult("uid"),
 			NewResult("has", NewResult("name"), NewResult("uid")),

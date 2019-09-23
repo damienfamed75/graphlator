@@ -1,18 +1,5 @@
 package graphlator
 
-type Parameter struct {
-	Operation operation
-	Predicate string
-	Value     interface{}
-}
-
-func (p Parameter) AsFilter() *Filters {
-	return &Filters{
-		constraint: invalidConstraint,
-		params:     []Parameter{p},
-	}
-}
-
 type Function struct {
 	Name      string
 	Parameter Parameter
@@ -20,56 +7,40 @@ type Function struct {
 	Results   []Result
 }
 
-type Result struct {
-	want       string
-	isExpanded bool
-	Expanded   []Result
+func (f *Function) InsertResults(results ...Result) {
+	f.Results = append(f.Results, results...)
 }
 
-func ResultSlice(r ...Result) []Result {
-	return r
-}
-
-func NewResult(want string, expanded ...Result) Result {
-	r := Result{want: want}
-
-	if len(expanded) != 0 {
-		r.isExpanded = true
-		r.Expanded = expanded
-	}
-
-	return r
-}
-
-type Filters struct {
-	constraint constraint
-	params     []Parameter
-}
-
-func ParamToFilter(p Parameter) *Filters {
-	return &Filters{
-		constraint: -1,
-		params:     []Parameter{p},
+func (f *Function) UpsertResults(results ...Result) {
+	for _, res := range results {
+		if !f.ResultExists(res) {
+			f.Results = append(f.Results, res)
+		}
 	}
 }
 
-func And(p ...Parameter) *Filters {
-	return &Filters{
-		constraint: and,
-		params:     p,
+func (f *Function) ResultExists(result Result) bool {
+	for _, r := range f.Results {
+		if r.want == result.want {
+			return true
+		}
 	}
+
+	return false
 }
 
-func Or(p ...Parameter) *Filters {
-	return &Filters{
-		constraint: or,
-		params:     p,
-	}
-}
+func (f *Function) RemoveResult(want string) []Result {
+	var tmp []Result
 
-func Not(p ...Parameter) *Filters {
-	return &Filters{
-		constraint: not,
-		params:     p,
+	for _, r := range f.Results {
+		if r.want == want {
+			continue
+		}
+
+		tmp = append(tmp, r)
 	}
+
+	f.Results = tmp
+
+	return tmp
 }

@@ -1,8 +1,8 @@
 package graphlator
 
 import (
-	"bytes"
 	"fmt"
+	"strings"
 	"sync"
 )
 
@@ -17,7 +17,7 @@ func setupTranslator() *Translator {
 		DefaultLanguage: GraphQLPlus,
 		buffers: sync.Pool{
 			New: func() interface{} {
-				return &bytes.Buffer{}
+				return &strings.Builder{}
 			},
 		},
 	}
@@ -33,8 +33,8 @@ func NewTranslator(r ...Regulation) *Translator {
 	return t
 }
 
-func (t *Translator) TranslateQuery(f Function, r ...Regulation) []byte {
-	buf := t.buffers.Get().(*bytes.Buffer)
+func (t *Translator) TranslateQuery(f Function, r ...Regulation) string {
+	buf := t.buffers.Get().(*strings.Builder)
 	defer func() {
 		buf.Reset()
 		t.buffers.Put(buf)
@@ -63,12 +63,12 @@ func (t *Translator) TranslateQuery(f Function, r ...Regulation) []byte {
 
 	buf.WriteByte('}') // End of Query
 
-	query := buf.Bytes()
+	query := buf.String()
 
 	return query
 }
 
-func writeOperation(buf *bytes.Buffer, p Parameter) {
+func writeOperation(buf StringByteWriter, p Parameter) {
 	switch p.Operation {
 	case operationUIDIn:
 		buf.WriteString(fmt.Sprintf("%s,%v)", p.Predicate, p.Value))
@@ -85,7 +85,7 @@ func writeOperation(buf *bytes.Buffer, p Parameter) {
 	buf.WriteByte(')')
 }
 
-func loopResults(buf *bytes.Buffer, r []Result) {
+func loopResults(buf StringByteWriter, r []Result) {
 	buf.WriteByte('{')
 	for _, rr := range r {
 		buf.WriteString(rr.want)

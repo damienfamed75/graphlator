@@ -8,18 +8,20 @@ func _() {
 	// An "invalid array index" compiler error signifies that the constant values have changed.
 	// Re-run the stringer command to generate them again.
 	var x [1]struct{}
+	_ = x[invalidConstraint - -1]
 	_ = x[and-0]
 	_ = x[or-1]
 	_ = x[not-2]
 }
 
-const _constraint_name = "ANDORNOT"
+const _constraint_name = "INVALIDANDORNOT"
 
-var _constraint_index = [...]uint8{0, 3, 5, 8}
+var _constraint_index = [...]uint8{0, 7, 10, 12, 15}
 
 func (i constraint) String() string {
+	i -= -1
 	if i < 0 || i >= constraint(len(_constraint_index)-1) {
-		return "constraint(" + strconv.FormatInt(int64(i), 10) + ")"
+		return "constraint(" + strconv.FormatInt(int64(i+-1), 10) + ")"
 	}
 	return _constraint_name[_constraint_index[i]:_constraint_index[i+1]]
 }

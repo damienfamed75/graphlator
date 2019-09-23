@@ -4,7 +4,8 @@ package graphlator
 type constraint int8
 
 const (
-	and constraint = iota // AND
-	or                    // OR
-	not                   // NOT
+	invalidConstraint constraint = iota - 1 // INVALID
+	and                                     // AND
+	or                                      // OR
+	not                                     // NOT
 )

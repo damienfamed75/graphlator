@@ -8,7 +8,7 @@ type Parameter struct {
 
 func (p Parameter) AsFilter() *Filters {
 	return &Filters{
-		constraint: -1,
+		constraint: invalidConstraint,
 		params:     []Parameter{p},
 	}
 }

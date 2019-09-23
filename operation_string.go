@@ -17,11 +17,14 @@ func _() {
 	_ = x[operationAllOfTerms-6]
 	_ = x[operationType-7]
 	_ = x[operationHas-8]
+	_ = x[operationRegexp-9]
+	_ = x[operationUIDIn-10]
+	_ = x[operationUID-11]
 }
 
-const _operation_name = "eqgelegtltanyOfTermsallOfTermstypehas"
+const _operation_name = "eqgelegtltanyOfTermsallOfTermstypehasregexpuid_inuid"
 
-var _operation_index = [...]uint8{0, 2, 4, 6, 8, 10, 20, 30, 34, 37}
+var _operation_index = [...]uint8{0, 2, 4, 6, 8, 10, 20, 30, 34, 37, 43, 49, 52}
 
 func (i operation) String() string {
 	if i < 0 || i >= operation(len(_operation_index)-1) {

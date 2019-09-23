@@ -14,6 +14,9 @@ const (
 	operationAllOfTerms                          // allOfTerms
 	operationType                                // type
 	operationHas                                 // has
+	operationRegexp                              // regexp
+	operationUIDIn                               // uid_in
+	operationUID                                 // uid
 )
 
 func Equal(predicate string, value interface{}) Parameter {
@@ -50,6 +53,18 @@ func Type(typeAsString string) Parameter {
 
 func Has(predicate string) Parameter {
 	return buildParamater(operationHas, predicate, nil)
+}
+
+func Regexp(predicate string, regex string) Parameter {
+	return buildParamater(operationRegexp, predicate, regex)
+}
+
+func UIDIn(predicate string, uid interface{}) Parameter {
+	return buildParamater(operationUIDIn, predicate, uid)
+}
+
+func UID(uid string) Parameter {
+	return buildParamater(operationUID, uid, nil)
 }
 
 func buildParamater(o operation, k string, v interface{}) Parameter {

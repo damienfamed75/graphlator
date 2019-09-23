@@ -53,8 +53,6 @@ func (t *Translator) TranslateQuery(f Function, r ...Regulation) []byte {
 				buf.WriteString(" " + f.Filters.constraint.String() + " ")
 			}
 			buf.WriteString(p.Operation.String() + "(")
-			// buf.WriteString(p.Predicate + ",") // TODO Change dynamic
-			// buf.WriteString(fmt.Sprintf("%#v)", p.Value))
 			writeOperation(buf, p)
 
 		}
@@ -72,6 +70,9 @@ func (t *Translator) TranslateQuery(f Function, r ...Regulation) []byte {
 
 func writeOperation(buf *bytes.Buffer, p Parameter) {
 	switch p.Operation {
+	case operationUIDIn:
+		buf.WriteString(fmt.Sprintf("%s,%v)", p.Predicate, p.Value))
+		fallthrough
 	case operationType:
 		buf.WriteString("\"" + p.Predicate + "\"")
 	default:
@@ -102,7 +103,16 @@ func loopResults(buf *bytes.Buffer, r []Result) {
 GraphQL+
 
 {
-	me(func: eq(name, "Damien")) {
+	me(func: type("person")) @filter(eq(name, "Damien")) {
+		uid
+		name
+	}
+}
+
+GraphQL
+
+{
+	person(name: "Damien") {
 		uid
 		name
 	}

@@ -9,7 +9,7 @@ import (
 func main() {
 	f := Function{
 		Name:      "me",
-		Parameter: Has("Friend"),
+		Parameter: UID("0x123"),
 		Filters:   And(GreaterThan("age", 18), Type("Friend")),
 		Results: ResultSlice(
 			NewResult("name"), NewResult("uid"),

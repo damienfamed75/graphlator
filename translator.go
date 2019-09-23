@@ -62,7 +62,11 @@ func (t *Translator) TranslateQuery(f Function, r ...Regulation) []byte {
 	}
 
 	buf.WriteByte('{')
-	buf.WriteString(f.Result.Name)
+
+	for _, r := range f.Results {
+		loopResults(buf, r)
+	}
+
 	buf.WriteByte('}')
 
 	buf.WriteByte('}') // End of Query
@@ -70,6 +74,18 @@ func (t *Translator) TranslateQuery(f Function, r ...Regulation) []byte {
 	query := buf.Bytes()
 
 	return query
+}
+
+func loopResults(buf *bytes.Buffer, r Result) {
+	buf.WriteString(r.want)
+	if r.isExpanded {
+		buf.WriteByte('{')
+		for _, rr := range r.Expanded {
+			loopResults(buf, rr)
+		}
+		buf.WriteByte('}')
+	}
+	buf.WriteByte(' ')
 }
 
 /*

@@ -65,6 +65,9 @@ func (t *Translator) TranslateQuery(f Function, r ...Regulation) string {
 
 	query := buf.String()
 
+	buf.Reset()
+	t.buffers.Put(buf)
+
 	return query
 }
 
@@ -90,7 +93,7 @@ func loopResults(buf StringByteWriter, r []Result) {
 	for _, rr := range r {
 		buf.WriteString(rr.want)
 		if rr.isExpanded {
-			loopResults(buf, rr.Expanded)
+			loopResults(buf, rr.ResultSlice)
 		}
 		buf.WriteByte(' ')
 	}

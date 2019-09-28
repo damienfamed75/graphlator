@@ -3,11 +3,7 @@ package graphlator
 type Result struct {
 	want       string
 	isExpanded bool
-	Expanded   []Result
-}
-
-func ResultSlice(r ...Result) []Result {
-	return r
+	ResultSlice
 }
 
 func NewResult(want string, expanded ...Result) Result {
@@ -15,7 +11,7 @@ func NewResult(want string, expanded ...Result) Result {
 
 	if len(expanded) != 0 {
 		r.isExpanded = true
-		r.Expanded = expanded
+		r.ResultSlice = expanded
 	}
 
 	return r
